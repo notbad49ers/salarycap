@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ms" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earth-97: Pangkalan Data Lore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* bg-slate-900 */
+            color: #cbd5e1; /* text-slate-300 */
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #0f172a;
+            border: 4px solid #06b6d4; /* border-cyan-500 */
+        }
+        .modal-content {
+            animation: slide-up 0.3s ease-out;
+        }
+        @keyframes slide-up {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 768px; /* max-w-3xl */
+            margin-left: auto;
+            margin-right: auto;
+            height: 40vh;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        /* Untuk transisi antara page */
+        body.page-transition-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-out; /* Kesan pudar keluar */
+        }
+        body.page-transition-in {
+            opacity: 0;
+            animation: fadeInPage 0.5s ease-in forwards; /* Kesan pudar masuk */
+        }
+        @keyframes fadeInPage {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-slate-900/70 backdrop-blur-lg sticky top-0 z-40 w-full border-b border-slate-700">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">
+                    <a href="#hero">EARTH-97</a>
+                </h1>
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
+                    <a href="#timeline" class="hover:text-cyan-400 transition-colors">Garis Masa</a>
+                    <a href="#character" class="hover:text-cyan-400 transition-colors">Watak</a>
+                    <a href="#world" class="hover:text-cyan-400 transition-colors">Dunia Lore</a>
+                    <a href="#analysis" class="hover:text-cyan-400 transition-colors">Analisis Ancaman</a>
+                    <a href="sarah_story.html" class="hover:text-cyan-400 transition-colors">Kisah Pagi Sarah</a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 p-4">
+            <a href="#timeline" class="block py-2 text-white hover:text-cyan-400">Garis Masa</a>
+            <a href="#character" class="block py-2 text-white hover:text-cyan-400">Watak</a>
+            <a href="#world" class="block py-2 text-white hover:text-cyan-400">Dunia Lore</a>
+            <a href="#analysis" class="block py-2 text-white hover:text-cyan-400">Analisis Ancaman</a>
+            <a href="sarah_story.html" class="block py-2 text-white hover:text-cyan-400">Kisah Pagi Sarah</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="relative min-h-screen flex items-center justify-center text-center bg-slate-900 overflow-hidden">
+             <div class="absolute inset-0 bg-grid-slate-700/[0.05] bg-[bottom_1px_center] [mask-image:linear-gradient(to_bottom,transparent,black)]"></div>
+             <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1),transparent)]"></div>
+            <div class="container mx-auto px-4 z-10">
+                <h2 class="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tighter leading-tight">Selamat Datang ke Earth-97</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-slate-400">
+                    Pada tahun 1984, dunia berubah selamanya. Satu gempa bumi dahsyat di Palung Mariana telah melepaskan raksasa-raksasa purba. Ini adalah arkib perjuangan manusia untuk terus hidup.
+                </p>
+                <a href="#timeline" class="mt-8 inline-block bg-cyan-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-cyan-600 transition-transform hover:scale-105">
+                    Terokai Garis Masa
+                </a>
+            </div>
+        </section>
+
+        <section id="timeline" class="py-20 md:py-32 bg-slate-800/50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Garis Masa Peristiwa</h3>
+                    <p class="mt-2 text-slate-400 max-w-2xl mx-auto">Jejaki detik-detik penting yang membentuk era baharu manusia dalam menentang ancaman raksasa.</p>
+                </div>
+                <div class="relative max-w-2xl mx-auto">
+                    <div class="absolute left-4 h-full border-l-2 border-dashed border-slate-600"></div>
+                    <div id="timeline-container" class="space-y-12">
+                        </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="character" class="py-20 md:py-32">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Watak Utama: Sarah Oliveira</h3>
+                    <p class="mt-2 text-slate-400 max-w-2xl mx-auto">Seorang pelatih berbakat yang takdirnya berubah secara drastik, menjadi harapan terakhir manusia.</p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-slate-800 rounded-2xl shadow-2xl shadow-cyan-500/10 overflow-hidden md:flex">
+                    <div class="md:w-1/3 bg-slate-700 flex items-center justify-center p-8">
+                         <div class="w-40 h-40 rounded-full bg-slate-600 border-4 border-cyan-400 flex items-center justify-center">
+                            <span class="text-6xl text-cyan-300">?</span>
+                         </div>
+                    </div>
+                    <div class="md:w-2/3 p-8">
+                        <h4 class="text-2xl font-bold text-white">Sarah Oliveira Busters</h4>
+                        <div class="mt-4 space-y-3 text-slate-300">
+                           <p><strong>Nama Penuh:</strong> <span id="char-name"></span></p>
+                           <p><strong>Asal:</strong> <span id="char-origin"></span></p>
+                           <p><strong>Umur (2009):</strong> <span id="char-age"></span></p>
+                           <p><strong>Status:</strong> <span id="char-status" class="font-bold text-cyan-400"></span></p>
+                        </div>
+                        <div class="mt-6 border-t border-slate-700 pt-6">
+                            <h5 class="font-bold text-white">Latar Belakang</h5>
+                            <p id="char-background" class="mt-2 text-slate-400 text-justify"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="world" class="py-20 md:py-32 bg-slate-800/50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Dunia Earth-97</h3>
+                    <p class="mt-2 text-slate-400 max-w-2xl mx-auto">Terokai kuasa-kuasa besar, teknologi perang, dan ancaman yang wujud di dunia yang telah berubah ini.</p>
+                </div>
+                <div id="lore-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    </div>
+            </div>
+        </section>
+        
+        <section id="analysis" class="py-20 md:py-32">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Analisis Ancaman Pertama</h3>
+                    <p class="mt-2 text-slate-400 max-w-2xl mx-auto">Visualisasi data saiz raksasa yang pertama kali muncul pada tahun 1984.</p>
+                </div>
+                <div class="bg-slate-800 p-4 sm:p-6 md:p-8 rounded-2xl shadow-lg">
+                    <div class="chart-container">
+                        <canvas id="monsterSizeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-slate-900 border-t border-slate-800 py-8">
+        <div class="container mx-auto px-4 text-center text-slate-500">
+            <p>&copy; 2025 Pangkalan Data Lore Earth-97. Dibina untuk peminat, oleh peminat.</p>
+        </div>
+    </footer>
+
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden p-4">
+        <div class="modal-content bg-slate-800 rounded-lg shadow-2xl w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+            <div class="sticky top-0 bg-slate-800/80 backdrop-blur-sm flex justify-between items-center p-4 border-b border-slate-700">
+                <h3 id="modal-title" class="text-xl font-bold text-white"></h3>
+                <button id="modal-close" class="text-slate-400 hover:text-white">&times;</button>
+            </div>
+            <div id="modal-body" class="p-6 text-slate-300">
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup page transitions
+            setupPageTransitions();
+
+            // Data
+            const timelineData = [
+                {
+                    year: '1984',
+                    title: 'Gempa Bumi Palung Mariana',
+                    content: 'Satu gempa bumi yang tidak pernah berlaku sebelum ini di Lautan Pasifik mencetuskan kemunculan tiga ekor raksasa bersaiz 10-18 meter. Makhluk-makhluk ini terus menyerang Peru, menandakan permulaan era konflik baharu. Ini dianggap Fasa Pertama ancaman.'
+                },
+                {
+                    year: '1984 (Respon Global)',
+                    title: 'Operasi Pertahanan Pertama',
+                    content: 'Kuasa-kuasa besar dunia seperti Amerika Syarikat, Rusia, China, dan Malaysia mengerahkan armada kapal perang dan pesawat tempur tercanggih. Malaysia, sebagai kuasa besar, menghantar "Helicarrier" yang dilengkapi senjata khas. Gabungan kuasa ini berjaya menewaskan ketiga-tiga raksasa tersebut.'
+                },
+                {
+                    year: '1990',
+                    title: 'Kelahiran Sarah Oliveira',
+                    content: 'Sarah Oliveira dilahirkan, bakal menjadi warganegara Malaysia dan seorang pelatih yang sangat berbakat dalam program pertahanan generasi akan datang.'
+                },
+                {
+                    year: '1990-an',
+                    title: 'Program "Busters" Dimulakan',
+                    content: 'Menyedari ancaman raksasa akan berterusan, manusia memulakan program pembangunan robot gergasi yang boleh dipandu, dinamakan "Busters". Program latihan juruterbang elit dilancarkan di setiap negara besar untuk mengendalikan jentera perang ini.'
+                },
+                {
+                    year: '2009',
+                    title: 'Insiden & Kelahiran Semula Sarah',
+                    content: 'Pada umur 18 tahun, Sarah, seorang pelatih cemerlang dalam program Busters, mengalami kemalangan ngeri yang hampir meragut nyawanya. Untuk menyelamatkannya, badannya yang hancur diintegrasikan ke dalam program robotik eksperimen T.A.N.G.K.I.S., mengubahnya menjadi sesuatu yang lebih daripada manusia.'
+                }
+            ];
+
+            const characterData = {
+                name: 'Sarah Oliveira Busters',
+                origin: 'Warganegara Malaysia (Lahir pada 1990)',
+                age: '18 (semasa insiden 2009)',
+                status: 'Aktif (Diintegrasikan dengan Program T.A.N.G.K.I.S.)',
+                background: 'Sarah adalah seorang pelatih generasi berbakat dalam Program Busters, yang menunjukkan potensi luar biasa dalam simulasi tempur. Kehidupannya berubah secara tragis apabila satu kemalangan jalan raya menyebabkan kecederaan parah yang tidak dapat dipulihkan oleh perubatan konvensional. Sebagai jalan terakhir untuk menyelamatkannya, badannya yang hancur diintegrasikan ke dalam prototaip T.A.N.G.K.I.S. (Tactical Advanced Networked Guardian Integrated System), sebuah badan sibernetik yang direka untuk menjadi senjata utama menentang raksasa.'
+            };
+
+            const loreData = [
+                {
+                    icon: '🛡️',
+                    title: 'Kuasa Dunia & Helicarrier',
+                    content: 'Dalam garis masa ini, Malaysia bangkit sebagai salah satu kuasa besar dunia, setanding dengan A.S., China, dan Rusia. Setiap kuasa besar memiliki sekurang-kurangnya satu "Helicarrier" - sebuah kapal induk terbang gergasi yang berfungsi sebagai pangkalan operasi mudah alih dan platform senjata utama. Helicarrier ini mampu bergerak ke mana-mana zon konflik dengan pantas dan membawa senjata khusus yang berkesan menentang raksasa.'
+                },
+                {
+                    icon: '🤖',
+                    title: 'Program "Busters"',
+                    content: 'Busters adalah robot tempur humanoid gergasi yang dipandu oleh seorang juruterbang. Ia direka bentuk seperti "Hulkbuster," membolehkan juruterbang masuk dan keluar dari kokpit. Pembangunan Busters menandakan peralihan strategi manusia daripada menggunakan senjata konvensional kepada pertempuran bersemuka dengan raksasa, memerlukan juruterbang dengan kemahiran dan keberanian yang luar biasa.'
+                },
+                {
+                    icon: '👾',
+                    title: 'Ancaman Raksasa (Kaiju)',
+                    content: 'Raksasa yang muncul dari Palung Mariana adalah makhluk biologi gergasi dengan ketinggian antara 10 hingga 18 meter pada kemunculan pertama. Mereka menunjukkan tahap pencerobohan yang tinggi dan ketahanan luar biasa terhadap senjata biasa. Kemunculan mereka secara berfasa menunjukkan kemungkinan adanya sumber atau sarang yang lebih besar di dasar laut.'
+                },
+                {
+                    icon: '🧠',
+                    title: 'Projek T.A.N.G.K.I.S.',
+                    content: 'T.A.N.G.K.I.S. adalah singkatan untuk Tactical Advanced Networked Guardian Integrated System. Ia merupakan sebuah program rahsia yang bertujuan untuk mengintegrasikan minda manusia secara langsung dengan badan robotik sepenuhnya. Sarah Oliveira adalah subjek pertama yang berjaya diintegrasikan, mencipta senjata hibrid manusia-mesin yang tiada tandingannya.'
+                }
+            ];
+            
+            // Populate Timeline
+            const timelineContainer = document.getElementById('timeline-container');
+            timelineData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'relative pl-8 sm:pl-12 py-4 group';
+                div.innerHTML = `
+                    <div class="timeline-item"></div>
+                    <div class="cursor-pointer group" data-title="${item.title}" data-content="${item.content}">
+                        <p class="text-sm font-medium text-cyan-400 mb-1">${item.year}</p>
+                        <h4 class="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">${item.title}</h4>
+                        <p class="mt-1 text-slate-400 text-sm">Klik untuk butiran lanjut...</p>
+                    </div>
+                `;
+                timelineContainer.appendChild(div);
+            });
+
+            // Populate Character
+            document.getElementById('char-name').textContent = characterData.name;
+            document.getElementById('char-origin').textContent = characterData.origin;
+            document.getElementById('char-age').textContent = characterData.age;
+            document.getElementById('char-status').textContent = characterData.status;
+            document.getElementById('char-background').textContent = characterData.background;
+
+            // Populate Lore
+            const loreGrid = document.getElementById('lore-grid');
+            loreData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'bg-slate-800 p-6 rounded-lg shadow-lg cursor-pointer hover:bg-slate-700/50 hover:-translate-y-1 transition-all';
+                div.setAttribute('data-title', item.title);
+                div.setAttribute('data-content', item.content);
+                div.innerHTML = `
+                    <div class="text-4xl mb-4">${item.icon}</div>
+                    <h4 class="text-xl font-bold text-white">${item.title}</h4>
+                    <p class="mt-2 text-slate-400 text-sm">Klik untuk mengetahui lebih lanjut</p>
+                `;
+                loreGrid.appendChild(div);
+            });
+
+            // Modal Logic
+            const modal = document.getElementById('modal');
+            const modalClose = document.getElementById('modal-close');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+
+            function openModal(title, content) {
+                modalTitle.textContent = title;
+                modalBody.innerHTML = content.replace(/\n/g, '<br>');
+                modal.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                modal.classList.add('hidden');
+            }
+
+            modalClose.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                }
+            });
+            
+            timelineContainer.addEventListener('click', (e) => {
+                const item = e.target.closest('.cursor-pointer');
+                if (item) {
+                    openModal(item.dataset.title, item.dataset.content);
+                }
+            });
+            
+            loreGrid.addEventListener('click', (e) => {
+                const item = e.target.closest('.cursor-pointer');
+                if (item) {
+                    openModal(item.dataset.title, item.dataset.content);
+                }
+            });
+
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+                mobileMenu.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'A') {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Chart.js
+            const ctx = document.getElementById('monsterSizeChart').getContext('2d');
+            const monsterSizeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Raksasa 1', 'Raksasa 2', 'Raksasa 3'],
+                    datasets: [{
+                        label: 'Anggaran Ketinggian (meter)',
+                        data: [12, 18, 10], // Example data based on 10-18m range
+                        backgroundColor: 'rgba(6, 182, 212, 0.6)',
+                        borderColor: 'rgba(6, 182, 212, 1)',
+                        borderWidth: 2,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Perbandingan Saiz Raksasa Fasa Pertama',
+                            color: '#e2e8f0', // text-slate-200
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e293b', // bg-slate-800
+                            titleColor: '#e2e8f0',
+                            bodyColor: '#cbd5e1',
+                            borderColor: '#06b6d4',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Ketinggian (m)',
+                                color: '#94a3b8' // text-slate-400
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            },
+                            grid: {
+                                color: 'rgba(203, 213, 225, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#94a3b8'
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // --- Fungsi untuk transisi antara page ---
+        function setupPageTransitions() {
+            // Kesan pudar masuk (fade-in) apabila halaman dimuat
+            document.body.classList.add('page-transition-in');
+            setTimeout(() => {
+                document.body.classList.remove('page-transition-in');
+            }, 500); // Masa mesti sama dengan 'animation' dalam CSS (0.5s)
+
+            // Memintas klik pada pautan untuk efek pudar keluar (fade-out)
+            document.querySelectorAll('a[href]').forEach(link => {
+                const href = link.getAttribute('href');
+                // Hanya guna untuk pautan yang menuju ke fail HTML tempatan yang berbeza
+                // dan bukan pautan dalam halaman (seperti #timeline) atau pautan ke luar laman
+                if (href && (href.endsWith('.html') || (href.startsWith('earth97_lore.html') && window.location.pathname.indexOf('earth97_lore.html') === -1) || (href.startsWith('sarah_story.html') && window.location.pathname.indexOf('sarah_story.html') === -1))) {
+                    if (!href.startsWith('#') && !link.target) { // Kecualikan pautan dalam halaman dan pautan tab baru
+                        link.addEventListener('click', function(e) {
+                            e.preventDefault(); // Hentikan navigasi lalai serta-merta
+                            document.body.classList.add('page-transition-out'); // Mulakan kesan pudar keluar
+                            setTimeout(() => {
+                                window.location.href = href; // Navigasi selepas kesan pudar keluar selesai
+                            }, 500); // Masa mesti sama dengan 'transition' dalam CSS (0.5s)
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+```
+
+---
+
+### `sarah_story.html` (Kisah Pagi Sarah: Dengan Navigasi Sama Seperti Laman Utama)
+
+Sila ganti sepenuhnya kandungan fail `sarah_story.html` anda dengan kod di bawah:
+
+
+```html
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisah Pagi Hari Sarah - Skrol Interaktif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        .main-container {
+            display: flex;
+            width: 700vw; /* 100vw per chapter + end screens */
+            height: 100vh;
+            overflow-x: hidden; /* Controlled by JS */
+            overflow-y: hidden;
+            scroll-behavior: smooth; /* Smooth scroll for direct links */
+        }
+        .scene {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            transition: background-color 0.5s ease;
+        }
+        .hotspot {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(6, 182, 212, 0.7);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+        .hotspot:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+        }
+        .hotspot-tooltip {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1e293b; /* slate-800 */
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+        }
+        .hotspot:hover .hotspot-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        #crash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+        }
+        @keyframes crash-flash {
+            0% { background-color: white; }
+            50% { background-color: white; }
+            100% { background-color: black; }
+        }
+        @keyframes screen-shake {
+            0% { transform: translate(0, 0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-5px, 5px); }
+            20%, 40%, 60%, 80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0, 0); }
+        }
+        /* Style for the centered "Mechanic" text */
+        #post-credit-text {
+            position: absolute;
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust for element's own size */
+            text-align: center; /* Ensure text is centered within the element */
+            /* The rest of the styling is applied via Tailwind classes in HTML */
+        }
+        /* Untuk transisi antara page */
+        body.page-transition-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-out; /* Kesan pudar keluar */
+        }
+        body.page-transition-in {
+            opacity: 0;
+            animation: fadeInPage 0.5s ease-in forwards; /* Kesan pudar masuk */
+        }
+        @keyframes fadeInPage {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-slate-900/70 backdrop-blur-lg sticky top-0 z-40 w-full border-b border-slate-700">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">
+                    <a href="earth97_lore.html#hero">EARTH-97</a>
+                </h1>
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
+                    <a href="earth97_lore.html#timeline" class="hover:text-cyan-400 transition-colors">Garis Masa</a>
+                    <a href="earth97_lore.html#character" class="hover:text-cyan-400 transition-colors">Watak</a>
+                    <a href="earth97_lore.html#world" class="hover:text-cyan-400 transition-colors">Dunia Lore</a>
+                    <a href="earth97_lore.html#analysis" class="hover:text-cyan-400 transition-colors">Analisis Ancaman</a>
+                    <a href="sarah_story.html" class="hover:text-cyan-400 transition-colors">Kisah Pagi Sarah</a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 p-4">
+            <a href="earth97_lore.html#timeline" class="block py-2 text-white hover:text-cyan-400">Garis Masa</a>
+            <a href="earth97_lore.html#character" class="block py-2 text-white hover:text-cyan-400">Watak</a>
+            <a href="earth97_lore.html#world" class="block py-2 text-white hover:text-cyan-400">Dunia Lore</a>
+            <a href="earth97_lore.html#analysis" class="block py-2 text-white hover:text-cyan-400">Analisis Ancaman</a>
+            <a href="sarah_story.html" class="block py-2 text-white hover:text-cyan-400">Kisah Pagi Sarah</a>
+        </div>
+    </header>
+
+    <div id="scroll-wrapper">
+        <div class="main-container" id="main-container">
+
+            <div id="scene-intro" class="scene bg-slate-50">
+                <div class="text-center max-w-2xl">
+                    <h1 class="text-5xl md:text-7xl title-font">Kisah Pagi Hari Sarah</h1>
+                    <p class="mt-4 text-slate-600">Sebuah Skrip 'One Motion Shot' Interaktif</p>
+                    <p class="mt-8 text-lg animate-pulse text-cyan-600 font-semibold">Tatal ke kanan untuk memulakan</p>
+                </div>
+            </div>
+
+            <div class="scene bg-slate-100">
+                <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 0: Benda Berlaku</p>
+                    <h2 class="text-3xl md:text-4xl mt-2">Sunyi pagi lembut menyelimuti bilik Sarah.</h2>
+                    <p class="mt-4 text-slate-600">Kamera perlahan-lahan meluncur dari sudut bilik terus ke wajah Sarah yang sedang tidur nyenyak, cahaya matahari pagi menyelinap menembusi langsir nipis. Kicauan burung lembut kedengaran sebagai latar.</p>
+                    
+                    <div class="hotspot" style="top: -20px; left: 10%;">
+                        🎥
+                        <span class="hotspot-tooltip">ARAHAN KAMERA: Gerak perlahan dari sudut bilik ke wajah Sarah.</span>
+                    </div>
+                     <div class="hotspot" style="bottom: 10%; right: 5%;">
+                        🔊
+                        <span class="hotspot-tooltip">SFX: Alarm loceng berbunyi kuat dan nyaring.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene bg-slate-50">
+                <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 1: Sarah Bangun Tidur</p>
+                    <h2 class="text-3xl md:text-4xl mt-2">Sarah bergeliat perlahan, menggosok matanya.</h2>
+                    <p class="mt-4 text-slate-600">Dia menghulurkan kaki ke bawah katil, bersiap untuk bangun. Dia melangkah ke arah cermin besar, memicit pipi tembamnya sambil ketawa kecil.</p>
+                     <div class="hotspot" style="top: 0; right: 15%;">
+                        🐈
+                        <span class="hotspot-tooltip">Chamby si kucing melompat ke katil, mengiau manja.</span>
+                    </div>
+                    <div class="hotspot" style="bottom: -10%; left: 20%;">
+                        🎥
+                        <span class="hotspot-tooltip">ARAHAN KAMERA: Wide shot, kemudian fokus pada cermin.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scene bg-slate-100">
+                <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 2: (Dilangkau Secara Kreatif)</p>
+                    <p class="mt-4 text-slate-600">Sarah membuka pintu bilik air perlahan, kemudian berpaling ke arah kamera dengan ekspresi terkejut.</p>
+                    <h2 class="text-3xl md:text-5xl mt-4 font-bold text-cyan-700">“Hoi! Intai ke?!”</h2>
+                    <p class="text-6xl mt-4 font-black" id="tam-sfx">*TAM!*</p>
+                    <div class="hotspot" style="top: 10%; left: 10%;">
+                        🎥
+                        <span class="hotspot-tooltip">ARAHAN KAMERA: POV "mata" penonton. Kamera jatuh ke lantai.</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="scene bg-slate-50">
+                <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 3 & 4: Siap Untuk Pergi</p>
+                    <h2 class="text-3xl md:text-4xl mt-2">Penuh keyakinan, dia siap melangkah keluar.</h2>
+                    <p class="mt-4 text-slate-600">Dia memilih pakaian, menyapu makeup ringan, dan mengeringkan rambut. Menyandang beg, kasut di tangan, dia melangkah keluar dari bilik dengan penuh semangat.</p>
+                     <h3 class="text-2xl mt-6 italic text-slate-800">“Nek! Sarah keluar dulu ya!”</h3>
+                    <div class="hotspot" style="top: 20%; right: 5%;">
+                        🎥
+                        <span class="hotspot-tooltip">ARAHAN KAMERA: Side shot, kemudian ikut dari belakang.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="crash-scene" class="scene bg-slate-100">
+                 <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 5: Di Luar Rumah</p>
+                    <h2 class="text-3xl md:text-4xl mt-2">Sarah membuka pintu pagar rumah.</h2>
+                </div>
+            </div>
+            
+            <div id="final-scene" class="scene bg-black text-white">
+                <p id="ending-text" class="text-center text-xl md:text-2xl opacity-0 transition-opacity duration-1000">
+                    </p>
+                <p id="post-credit-text" class="text-2xl md:text-4xl font-mono tracking-widest animate-pulse opacity-0 transition-opacity duration-1000">
+                    Mechanic
+                </p>
+            </div>
+
+        </div>
+    </div>
+    
+    <div id="crash-overlay"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('main-container');
+            const wrapper = document.getElementById('scroll-wrapper');
+            const scenes = document.querySelectorAll('.scene');
+            const totalWidth = container.offsetWidth;
+            const sceneWidth = window.innerWidth;
+
+            let currentPosition = 0;
+            let targetPosition = 0;
+            const ease = 0.08; 
+            
+            let isCrashTriggered = false;
+
+            function smoothScroll() {
+                currentPosition += (targetPosition - currentPosition) * ease;
+                container.style.transform = `translateX(-${currentPosition}px)`;
+                
+                // Crash Scene Logic - Tetap sama, pada scene ke-5 (index 5)
+                const crashSceneStart = sceneWidth * 5; // Scene 5 bermula pada index 5
+                if (currentPosition >= crashSceneStart && !isCrashTriggered) { // Gunakan >= untuk pastikan trigger
+                    triggerCrash();
+                }
+
+                requestAnimationFrame(smoothScroll);
+            }
+
+            wrapper.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                targetPosition += e.deltaY;
+                // Hadkan tatalan hingga akhir scene terakhir
+                targetPosition = Math.max(0, Math.min(targetPosition, (scenes.length * sceneWidth) - sceneWidth));
+            });
+
+            function triggerCrash() {
+                isCrashTriggered = true;
+                const crashOverlay = document.getElementById('crash-overlay');
+                const endingTextElement = document.getElementById('ending-text');
+                const postCreditElement = document.getElementById('post-credit-text');
+
+                // 1. Hon kereta dan brek mengejut (konseptual - bunyi perlu dimainkan secara berasingan jika ada)
+                // SFX: Hon kereta dan brek mengejut (Ini hanya teks arahan, tiada bunyi sebenar dalam kod ini)
+
+                // 2. CUT TO BLACK secara tiba-tiba & Dentuman kuat
+                // Kekalkan kesan gegaran dan kilat hitam pendek (cut to black) seperti arahan skrip
+                document.body.style.animation = 'screen-shake 0.5s ease-in-out'; // Gegaran skrin
+                crashOverlay.style.animation = 'crash-flash 0.3s forwards'; // Kilat putih dan pudar ke hitam awal
+                crashOverlay.style.opacity = '1'; // Pastikan overlay hitam muncul
+
+                // Teks ENDING – TEXT ON SCREEN akan muncul selepas kemalangan
+                setTimeout(() => {
+                    // Buang efek gegaran dari body
+                    document.body.style.animation = '';
+                    // Sembunyikan overlay hitam selepas kilat awal jika ada
+                    crashOverlay.style.opacity = '0'; 
+                    crashOverlay.style.animation = 'none';
+
+                    // Paparkan teks akhir yang TEPAT dari skrip
+                    endingTextElement.innerHTML = `"Sarah dikejarkan ke hospital dalam keadaan kritikal."`; // TEKS AKHIR YANG TEPAT
+                    endingTextElement.style.opacity = '1';
+                }, 1000); // Teks akhir muncul 1 saat selepas kemalangan
+
+                // Teks Post-Credit Scene ("Mechanic") akan muncul kemudian
+                setTimeout(() => {
+                    endingTextElement.style.opacity = '0'; // Sembunyikan teks akhir
+                    postCreditElement.style.opacity = '1'; // Paparkan "Mechanic"
+                }, 4000); // "Mechanic" muncul 4 saat selepas kemalangan (3s selepas teks akhir)
+            }
+
+            // 'TAM!' SFX animation (untuk babak bilik air)
+            const tamSfx = document.getElementById('tam-sfx');
+            if (tamSfx) { // Pastikan elemen wujud sebelum menambah event listener
+                tamSfx.addEventListener('mouseover', () => {
+                    tamSfx.classList.add('animate-ping');
+                    setTimeout(() => tamSfx.classList.remove('animate-ping'), 500);
+                });
+            }
+            
+            // Pengendalian pautan navigasi dalam halaman
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Kira posisi target dalam main-container
+                        const targetSceneIndex = Array.from(scenes).indexOf(targetElement);
+                        if (targetSceneIndex !== -1) {
+                            // targetPosition = targetSceneIndex * sceneWidth; // Ini untuk lompat terus ke awal scene
+                            // Gunakan scrollIntoView untuk scroll lancar ke elemen target
+                            targetElement.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+
+            // Mobile menu toggle logic
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+                mobileMenu.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'A') {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            }
+
+            // --- Fungsi untuk transisi antara page (dipanggil di sini) ---
+            setupPageTransitions();
+
+
+            smoothScroll();
+        });
+
+        // --- Fungsi untuk transisi antara page (diletakkan di luar DOMContentLoaded supaya boleh dipanggil) ---
+        function setupPageTransitions() {
+            // Kesan pudar masuk (fade-in) apabila halaman dimuat
+            document.body.classList.add('page-transition-in');
+            setTimeout(() => {
+                document.body.classList.remove('page-transition-in');
+            }, 500); // Masa mesti sama dengan 'animation' dalam CSS (0.5s)
+
+            // Memintas klik pada pautan untuk efek pudar keluar (fade-out)
+            document.querySelectorAll('a[href]').forEach(link => {
+                const href = link.getAttribute('href');
+                // Hanya guna untuk pautan yang menuju ke fail HTML tempatan yang berbeza
+                // dan bukan pautan dalam halaman (seperti #timeline) atau pautan ke luar laman
+                if (href && (href.endsWith('.html') || (href.startsWith('earth97_lore.html') && window.location.pathname.indexOf('earth97_lore.html') === -1) || (href.startsWith('sarah_story.html') && window.location.pathname.indexOf('sarah_story.html') === -1))) {
+                    if (!href.startsWith('#') && !link.target) { // Kecualikan pautan dalam halaman dan pautan tab baru
+                        link.addEventListener('click', function(e) {
+                            e.preventDefault(); // Hentikan navigasi lalai serta-merta
+                            document.body.classList.add('page-transition-out'); // Mulakan kesan pudar keluar
+                            setTimeout(() => {
+                                window.location.href = href; // Navigasi selepas kesan pudar keluar selesai
+                            }, 500); // Masa mesti sama dengan 'transition' dalam CSS (0.5s)
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

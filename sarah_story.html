@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisah Pagi Hari Sarah - Skrol Interaktif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Misty Morning -->
+    <!-- Application Structure Plan: Aplikasi ini menggunakan reka bentuk tatalan mendatar untuk meniru gaya 'One Motion Shot' dari skrip sumber. Setiap bab adalah sebuah panel dalam urutan seperti filem yang berterusan. Titik panas interaktif untuk arahan kamera dan SFX didedahkan apabila diklik, menjaga pandangan utama bersih. Aliran pengguna adalah linear, membimbing mereka melalui naratif dari pagi yang tenang ke klimaks yang mendadak dan memberi kesan, yang dianimasikan untuk kesan dramatik. Struktur ini menterjemahkan skrip linear ke dalam pengalaman penceritaan yang interaktif dan mendalam. -->
+    <!-- Visualization & Content Choices:
+        - Aliran Naratif (Perubahan): Diwakili oleh bekas tatalan mendatar (HTML/CSS), dengan tatalan pengguna sebagai interaksi. Ini secara langsung meniru pergerakan kamera berterusan dalam skrip.
+        - Butiran Kamera/SFX (Makluman): Diwakili oleh ikon yang boleh diklik (HTML Unicode) yang menogol tindanan (JS). Ini menyusun maklumat teknikal tanpa mengganggu aliran naratif.
+        - Adegan Klimaks (Makluman/Kesan): Urutan animasi CSS skrin penuh (kilat, gegaran, pudar ke hitam awal) yang dicetuskan oleh tatalan ke panel akhir. Teks akhir yang tepat dan post-credit "Mechanic" sahaja dipaparkan. (Elemen kasut telah dibuang sepenuhnya).
+        - Tiada pustaka Chart.js atau Plotly.js digunakan kerana sumbernya adalah naratif semata-mata, dan tiada grafik SVG atau Mermaid JS digunakan.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. NO Chart.js used. NO Plotly.js used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .title-font {
+            font-family: 'Playfair Display', serif;
+        }
+        .main-container {
+            display: flex;
+            width: 700vw; /* 100vw per chapter + end screens */
+            height: 100vh;
+            overflow-x: hidden; /* Controlled by JS */
+            overflow-y: hidden;
+            scroll-behavior: smooth; /* Smooth scroll for direct links */
+        }
+        .scene {
+            width: 100vw;
+            height: 100vh;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            transition: background-color 0.5s ease;
+        }
+        .hotspot {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(6, 182, 212, 0.7);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+        }
+        .hotspot:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+        }
+        .hotspot-tooltip {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1e293b; /* slate-800 */
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+        }
+        .hotspot:hover .hotspot-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        #crash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+        }
+        @keyframes crash-flash {
+            0% { background-color: white; }
+            50% { background-color: white; }
+            100% { background-color: black; }
+        }
+        @keyframes screen-shake {
+            0% { transform: translate(0, 0); }
+            10%, 30%, 50%, 70%, 90% { transform: translate(-5px, 5px); }
+            20%, 40%, 60%, 80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0, 0); }
+        }
+        /* Style for the centered "Mechanic" text */
+        #post-credit-text {
+            position: absolute;
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust for element's own size */
+            text-align: center; /* Ensure text is centered within the element */
+            /* The rest of the styling is applied via Tailwind classes in HTML */
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- Header & Navigation (Replicated from earth97_lore.html) -->
+    <header class="bg-slate-900/70 backdrop-blur-lg sticky top-0 z-40 w-full border-b border-slate-700">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">
+                    <a href="earth97_lore.html#hero">EARTH-97</a>
+                </h1>
+                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
+                    <a href="earth97_lore.html#timeline" class="hover:text-cyan-400 transition-colors">Garis Masa</a>
+                    <a href="earth97_lore.html#character" class="hover:text-cyan-400 transition-colors">Watak</a>
+                    <a href="earth97_lore.html#world" class="hover:text-cyan-400 transition-colors">Dunia Lore</a>
+                    <a href="earth97_lore.html#analysis" class="hover:text-cyan-400 transition-colors">Analisis Ancaman</a>
+                    <a href="sarah_story.html" class="hover:text-cyan-400 transition-colors">Kisah Pagi Sarah</a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu (Replicated from earth97_lore.html) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-800 p-4">
+            <a href="earth97_lore.html#timeline" class="block py-2 text-white hover:text-cyan-400">Garis Masa</a>
+            <a href="earth97_lore.html#character" class="block py-2 text-white hover:text-cyan-400">Watak</a>
+            <a href="earth97_lore.html#world" class="block py-2 text-white hover:text-cyan-400">Dunia Lore</a>
+            <a href="earth97_lore.html#analysis" class="block py-2 text-white hover:text-cyan-400">Analisis Ancaman</a>
+            <a href="sarah_story.html" class="block py-2 text-white hover:text-cyan-400">Kisah Pagi Sarah</a>
+        </div>
+    </header>
+
+    <div id="scroll-wrapper">
+        <div class="main-container" id="main-container">
+
+            <!-- Scene 0: Introduction (Linked as #scene-intro) -->
+            <div id="scene-intro" class="scene bg-slate-50">
+                <div class="text-center max-w-2xl">
+                    <h1 class="text-5xl md:text-7xl title-font">Kisah Pagi Hari Sarah</h1>
+                    <p class="mt-4 text-slate-600">Sebuah Skrip 'One Motion Shot' Interaktif</p>
+                    <p class="mt-8 text-lg animate-pulse text-cyan-600 font-semibold">Tatal ke kanan untuk memulakan</p>
+                </div>
+            </div>
+
+            <!-- Scene 1: Bab 0 - Benda Berlaku -->
+            <div class="scene bg-slate-100">
+                <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 0: Benda Berlaku</p>
+                    <h2 class="text-3xl md:text-4xl mt-2">Sunyi pagi lembut menyelimuti bilik Sarah.</h2>
+                    <p class="mt-4 text-slate-600">Kamera perlahan-lahan meluncur dari sudut bilik terus ke wajah Sarah yang sedang tidur nyenyak, cahaya matahari pagi menyelinap menembusi langsir nipis. Kicauan burung lembut kedengaran sebagai latar.</p>
+                    
+                    <div class="hotspot" style="top: -20px; left: 10%;">
+                        🎥
+                        <span class="hotspot-tooltip">ARAHAN KAMERA: Gerak perlahan dari sudut bilik ke wajah Sarah.</span>
+                    </div>
+                     <div class="hotspot" style="bottom: 10%; right: 5%;">
+                        🔊
+                        <span class="hotspot-tooltip">SFX: Alarm loceng berbunyi kuat dan nyaring.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 2: Bab 1 - Sarah Bangun Tidur -->
+            <div class="scene bg-slate-50">
+                <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 1: Sarah Bangun Tidur</p>
+                    <h2 class="text-3xl md:text-4xl mt-2">Sarah bergeliat perlahan, menggosok matanya.</h2>
+                    <p class="mt-4 text-slate-600">Dia menghulurkan kaki ke bawah katil, bersiap untuk bangun. Dia melangkah ke arah cermin besar, memicit pipi tembamnya sambil ketawa kecil.</p>
+                     <div class="hotspot" style="top: 0; right: 15%;">
+                        🐈
+                        <span class="hotspot-tooltip">Chamby si kucing melompat ke katil, mengiau manja.</span>
+                    </div>
+                    <div class="hotspot" style="bottom: -10%; left: 20%;">
+                        🎥
+                        <span class="hotspot-tooltip">ARAHAN KAMERA: Wide shot, kemudian fokus pada cermin.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 3: Bab 2 - Bilik Air -->
+            <div class="scene bg-slate-100">
+                <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 2: (Dilangkau Secara Kreatif)</p>
+                    <p class="mt-4 text-slate-600">Sarah membuka pintu bilik air perlahan, kemudian berpaling ke arah kamera dengan ekspresi terkejut.</p>
+                    <h2 class="text-3xl md:text-5xl mt-4 font-bold text-cyan-700">“Hoi! Intai ke?!”</h2>
+                    <p class="text-6xl mt-4 font-black" id="tam-sfx">*TAM!*</p>
+                    <div class="hotspot" style="top: 10%; left: 10%;">
+                        🎥
+                        <span class="hotspot-tooltip">ARAHAN KAMERA: POV "mata" penonton. Kamera jatuh ke lantai.</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Scene 4: Bab 3 & 4 - Bersiap & Keluar Rumah -->
+            <div class="scene bg-slate-50">
+                <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 3 & 4: Siap Untuk Pergi</p>
+                    <h2 class="text-3xl md:text-4xl mt-2">Penuh keyakinan, dia siap melangkah keluar.</h2>
+                    <p class="mt-4 text-slate-600">Dia memilih pakaian, menyapu makeup ringan, dan mengeringkan rambut. Menyandang beg, kasut di tangan, dia melangkah keluar dari bilik dengan penuh semangat.</p>
+                     <h3 class="text-2xl mt-6 italic text-slate-800">“Nek! Sarah keluar dulu ya!”</h3>
+                    <div class="hotspot" style="top: 20%; right: 5%;">
+                        🎥
+                        <span class="hotspot-tooltip">ARAHAN KAMERA: Side shot, kemudian ikut dari belakang.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scene 5: Bab 5 - Di Luar Rumah (The Climax) -->
+            <div id="crash-scene" class="scene bg-slate-100">
+                 <div class="text-center max-w-xl relative">
+                    <p class="text-sm text-cyan-600 font-semibold">Bab 5: Di Luar Rumah</p>
+                    <h2 class="text-3xl md:text-4xl mt-2">Sarah membuka pintu pagar rumah.</h2>
+                </div>
+            </div>
+            
+            <!-- Scene 6: Ending & Post-Credit -->
+            <div id="final-scene" class="scene bg-black text-white">
+                <!-- Teks akhir skrip akan muncul di sini -->
+                <p id="ending-text" class="text-center text-xl md:text-2xl opacity-0 transition-opacity duration-1000">
+                    <!-- Teks ini akan diisi oleh JavaScript -->
+                </p>
+                <!-- Post-Credit Scene "Mechanic" -->
+                <p id="post-credit-text" class="text-2xl md:text-4xl font-mono tracking-widest animate-pulse opacity-0 transition-opacity duration-1000">
+                    Mechanic
+                </p>
+            </div>
+
+        </div>
+    </div>
+    
+    <div id="crash-overlay"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('main-container');
+            const wrapper = document.getElementById('scroll-wrapper');
+            const scenes = document.querySelectorAll('.scene');
+            const totalWidth = container.offsetWidth;
+            const sceneWidth = window.innerWidth;
+
+            let currentPosition = 0;
+            let targetPosition = 0;
+            const ease = 0.08; 
+            
+            let isCrashTriggered = false;
+
+            function smoothScroll() {
+                currentPosition += (targetPosition - currentPosition) * ease;
+                container.style.transform = `translateX(-${currentPosition}px)`;
+                
+                // Crash Scene Logic - Tetap sama, pada scene ke-5 (index 5)
+                const crashSceneStart = sceneWidth * 5; // Scene 5 bermula pada index 5
+                if (currentPosition >= crashSceneStart && !isCrashTriggered) { // Gunakan >= untuk pastikan trigger
+                    triggerCrash();
+                }
+
+                requestAnimationFrame(smoothScroll);
+            }
+
+            wrapper.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                targetPosition += e.deltaY;
+                // Hadkan tatalan hingga akhir scene terakhir
+                targetPosition = Math.max(0, Math.min(targetPosition, (scenes.length * sceneWidth) - sceneWidth));
+            });
+
+            function triggerCrash() {
+                isCrashTriggered = true;
+                const crashOverlay = document.getElementById('crash-overlay');
+                const endingTextElement = document.getElementById('ending-text');
+                const postCreditElement = document.getElementById('post-credit-text');
+
+                // 1. Hon kereta dan brek mengejut (konseptual - bunyi perlu dimainkan secara berasingan jika ada)
+                // SFX: Hon kereta dan brek mengejut (Ini hanya teks arahan, tiada bunyi sebenar dalam kod ini)
+
+                // 2. CUT TO BLACK secara tiba-tiba & Dentuman kuat
+                // Kekalkan kesan gegaran dan kilat hitam pendek (cut to black) seperti arahan skrip
+                document.body.style.animation = 'screen-shake 0.5s ease-in-out'; // Gegaran skrin
+                crashOverlay.style.animation = 'crash-flash 0.3s forwards'; // Kilat putih dan pudar ke hitam awal
+                crashOverlay.style.opacity = '1'; // Pastikan overlay hitam muncul
+
+                // Teks ENDING – TEXT ON SCREEN akan muncul selepas kemalangan
+                setTimeout(() => {
+                    // Buang efek gegaran dari body
+                    document.body.style.animation = '';
+                    // Sembunyikan overlay hitam selepas kilat awal jika ada
+                    crashOverlay.style.opacity = '0'; 
+                    crashOverlay.style.animation = 'none';
+
+                    // Paparkan teks akhir yang TEPAT dari skrip
+                    endingTextElement.innerHTML = `"Sarah dikejarkan ke hospital dalam keadaan kritikal."`; // TEKS AKHIR YANG TEPAT
+                    endingTextElement.style.opacity = '1';
+                }, 1000); // Teks akhir muncul 1 saat selepas kemalangan
+
+                // Teks Post-Credit Scene ("Mechanic") akan muncul kemudian
+                setTimeout(() => {
+                    endingTextElement.style.opacity = '0'; // Sembunyikan teks akhir
+                    postCreditElement.style.opacity = '1'; // Paparkan "Mechanic"
+                }, 4000); // "Mechanic" muncul 4 saat selepas kemalangan (3s selepas teks akhir)
+            }
+
+            // 'TAM!' SFX animation (untuk babak bilik air)
+            const tamSfx = document.getElementById('tam-sfx');
+            if (tamSfx) { // Pastikan elemen wujud sebelum menambah event listener
+                tamSfx.addEventListener('mouseover', () => {
+                    tamSfx.classList.add('animate-ping');
+                    setTimeout(() => tamSfx.classList.remove('animate-ping'), 500);
+                });
+            }
+            
+            // Pengendalian pautan navigasi dalam halaman
+            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Kira posisi target dalam main-container
+                        const targetSceneIndex = Array.from(scenes).indexOf(targetElement);
+                        if (targetSceneIndex !== -1) {
+                            // targetPosition = targetSceneIndex * sceneWidth; // Ini untuk lompat terus ke awal scene
+                            // Gunakan scrollIntoView untuk scroll lancar ke elemen target
+                            targetElement.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+
+            // Mobile menu toggle logic
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+                // Close mobile menu when a link is clicked
+                mobileMenu.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'A') {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            }
+
+
+            smoothScroll();
+        });
+    </script>
+
+</body>
+</html>
